@@ -37,7 +37,7 @@ router.get("/", isAdmin, getTutors);
 
 router.get("/:tutorId", isAdmin, getTutorById);
 
-router.delete("/:tutorId", isAdmin, deleteTutor);
+router.delete("/deleteTutor/:tutorId", isAdmin, deleteTutor);
 
 //lesson crud
 router.post("/createLesson", isAdmin, createLesson);

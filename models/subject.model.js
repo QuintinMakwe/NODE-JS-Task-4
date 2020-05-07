@@ -8,14 +8,21 @@ const subjectSchema = new Schema({
   },
   category: {
     type: String,
-    enum: ["primarry", "jss", "sss"],
+    enum: ["primary", "jss", "sss"],
     required: true,
   },
-  material: [
+  data: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Material",
+      type: String, //this should contain link to the google sheet(s) for this subject
       required: true,
+      validate: {
+        validator: function (value) {
+          return /(https?):\/\/([\w-]+(\.[\\w-]+)*\.([a-z]+))(([\w.,@?^=%&amp;:\/~+#()!-]*)([\w@?^=%&amp;\/~+#()!-]))?/gi.test(
+            value
+          );
+        },
+        message: "Enter a valid url please",
+      },
     },
   ],
 });

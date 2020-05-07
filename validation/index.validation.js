@@ -16,7 +16,6 @@ module.exports.isAdmin = (req, res, next) => {
       return decoded;
     });
     if (decoded.data.isAdmin == true) {
-      console.log(decoded);
       next();
     } else {
       res.status(401).json({ err: "You aren't authorized to view this route" });

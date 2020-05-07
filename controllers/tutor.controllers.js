@@ -1,5 +1,4 @@
 const Lesson = require("../models/lesson.model");
-const Material = require("../models/material.model");
 const Student = require("../models/student.model");
 const Tutor = require("../models/tutor.model");
 
