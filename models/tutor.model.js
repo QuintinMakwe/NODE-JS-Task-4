@@ -6,6 +6,10 @@ const tutorSchema = new Schema({
     type: String,
     required: true,
   },
+  password: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -20,13 +24,21 @@ const tutorSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: "Subject",
-      required: true,
+      default: null,
     },
   ],
   admin: {
     type: Boolean,
     required: true,
   },
+});
+
+tutorSchema.pre("save", function (next) {
+  console.log(this.subjects.length);
+  console.log("these is the name", this.name);
+  //perform subject validation here
+
+  next();
 });
 
 module.exports = mongoose.model("Tutor", tutorSchema);
