@@ -9,6 +9,8 @@ const app = express();
 const { mongooseConnectionString, port } = require("./config/config.index");
 const adminRoutes = require("./routes/admin.routes");
 const tutorRoutes = require("./routes/tutor.routes");
+const studentRoutes = require("./routes/student.routes");
+const generalRoutes = require("./routes/general.routes");
 
 //Mongoose set-up
 mongoose.connect(mongooseConnectionString, {
@@ -42,6 +44,8 @@ app.use((req, res, next) => {
 //port routes
 app.use("/api/v1/admin/tutor", adminRoutes);
 app.use("/api/v1/tutor", tutorRoutes);
+app.use("/api/v1/student", studentRoutes);
+app.use("/api/v1/general", generalRoutes);
 
 app.listen(port, () => {
   console.log(`listening on port ${port}...`);

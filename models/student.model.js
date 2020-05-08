@@ -16,14 +16,16 @@ const studentSchema = new Schema({
       message: "Enter a valid email",
     },
   },
-  category: {
+  password: {
     type: String,
-    enum: ["primary", "jss", "sss"],
+    required: true,
   },
   admin: {
     type: Boolean,
+    default: false,
     required: true,
   },
+  lessons: [{ type: Schema.Types.ObjectId, defaault: null }],
 });
 
 module.exports = mongoose.model("Student", studentSchema);
