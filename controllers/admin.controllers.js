@@ -179,7 +179,7 @@ module.exports.deleteCategory = async (req, res) => {
 module.exports.getTutors = async (req, res) => {
   try {
     const tutor = await Tutor.find();
-    res.status(200).json({ tutor });
+    res.status(200).json({ message: tutor });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
