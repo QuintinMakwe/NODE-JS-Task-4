@@ -47,6 +47,15 @@ app.use("/api/v1/tutor", tutorRoutes);
 app.use("/api/v1/student", studentRoutes);
 app.use("/api/v1/general", generalRoutes);
 
+app.use("*", (req, res) => {
+  res
+    .status(404)
+    .json({
+      warning:
+        "You have reached the end of the internet :) Try entering a valid route next time",
+    });
+});
+
 app.listen(port, () => {
   console.log(`listening on port ${port}...`);
 });
