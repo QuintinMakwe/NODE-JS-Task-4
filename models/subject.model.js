@@ -27,6 +27,8 @@ const subjectSchema = new Schema({
   ],
 });
 
+subjectSchema.index({ name: "text" });
+
 subjectSchema.pre("updateOne", async function (next) {
   if (this._update.$set.category) {
     const validCategory = ["primary", "sss", "jss"];
