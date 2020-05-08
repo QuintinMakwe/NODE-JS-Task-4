@@ -27,4 +27,15 @@ const subjectSchema = new Schema({
   ],
 });
 
+subjectSchema.pre("updateOne", async function (next) {
+  if (this._update.$set.category) {
+    const validCategory = ["primary", "sss", "jss"];
+    if (validCategory.includes(this._update.$set.category)) {
+      next();
+    } else {
+      throw new Error("Enter a valid category please");
+    }
+  }
+});
+
 module.exports = mongoose.model("Subject", subjectSchema);

@@ -50,4 +50,24 @@ const lessonSchema = new Schema({
   ],
 });
 
+lessonSchema.pre("updateOne", async function (next) {
+  // console.log("this is update set ", this._update.$set);
+  // console.log("this is the get query ", this.getQuery());
+  // const docToUpdate = await this.model.findOne(this.getQuery());
+  // console.log("this is doc before being updated ", docToUpdate);
+  if (this._update.$set.timeStart) {
+    if (
+      new Date(this._update.$set.timeStart).getTime() < new Date().getTime()
+    ) {
+      throw new Error("You can't schedule a lesson to start in the past");
+    }
+  }
+  if (this._update.$set.timeEnd) {
+    if (new Date(this._update.$set.timeEnd).getTime() < new Date().getTime()) {
+      throw new Error("You can't schedule a lesson to end in the past");
+    }
+  }
+  next();
+});
+
 module.exports = mongoose.model("Lesson", lessonSchema);

@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+const Subject = require("./subject.model");
+
 const tutorSchema = new Schema({
   name: {
     type: String,
@@ -22,8 +24,7 @@ const tutorSchema = new Schema({
   },
   subjects: [
     {
-      type: Schema.Types.ObjectId,
-      ref: "Subject",
+      type: String,
       default: null,
     },
   ],
@@ -33,12 +34,5 @@ const tutorSchema = new Schema({
   },
 });
 
-tutorSchema.pre("save", function (next) {
-  console.log(this.subjects.length);
-  console.log("these is the name", this.name);
-  //perform subject validation here
-
-  next();
-});
 
 module.exports = mongoose.model("Tutor", tutorSchema);

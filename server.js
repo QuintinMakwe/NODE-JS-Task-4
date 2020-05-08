@@ -40,7 +40,7 @@ app.use((req, res, next) => {
 });
 
 //port routes
-app.use("/api/v1/admin", adminRoutes);
+app.use("/api/v1/admin/tutor", adminRoutes);
 app.use("/api/v1/tutor", tutorRoutes);
 
 app.listen(port, () => {
