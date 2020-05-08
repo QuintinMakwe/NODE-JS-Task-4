@@ -6,7 +6,11 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
 
-const { atlasConnectionString, port } = require("./config/config.index");
+const {
+  atlasConnectionString,
+  port,
+  mongooseConnectionString,
+} = require("./config/config.index");
 const adminRoutes = require("./routes/admin.routes");
 const tutorRoutes = require("./routes/tutor.routes");
 const studentRoutes = require("./routes/student.routes");
