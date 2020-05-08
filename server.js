@@ -6,14 +6,14 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const app = express();
 
-const { mongooseConnectionString, port } = require("./config/config.index");
+const { atlasConnectionString, port } = require("./config/config.index");
 const adminRoutes = require("./routes/admin.routes");
 const tutorRoutes = require("./routes/tutor.routes");
 const studentRoutes = require("./routes/student.routes");
 const generalRoutes = require("./routes/general.routes");
 
 //Mongoose set-up
-mongoose.connect(mongooseConnectionString, {
+mongoose.connect(atlasConnectionString, {
   useNewUrlParser: true,
 });
 
@@ -28,7 +28,15 @@ mongoose.connection.on("connected", (err, res) => {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors({ origin: ["http://localhost:3000"], credentials: true }));
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://quintinonlineschool.herokuapp.com/",
+    ],
+    credentials: true,
+  })
+);
 
 //Set-up extra middleware for the api
 app.use((req, res, next) => {
