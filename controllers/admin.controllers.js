@@ -62,7 +62,7 @@ module.exports.createSubject = async (req, res) => {
           .json({ error: "You have to input at least one data url" });
       }
       const subject = await new Subject({ name, category, data }).save();
-      res.status(200).json({ subject });
+      res.status(200).json({ message: subject });
     }
   } catch (err) {
     res.status(400).json({ error: err.message });
