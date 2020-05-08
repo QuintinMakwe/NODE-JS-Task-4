@@ -7,17 +7,35 @@ This contains the server side code for node js task 4 of Start Ng remote Interns
 
 ### Admin Routes
   #### Make a tutor admin [ POST /api/v1/admin/tutor/maketutoradmin ]
-  
+    REQ
+      body -> {email}
+    RES : 200
+      body -> {message: `Tutor with email ${email} has been made an admin`}
   #### Create a subject [ POST /api/v1/admin/tutor/createSubject ]
-  
+    REQ
+      body -> {name, category, detail}
+    RES : 200
+      body -> {message: subject}  
   #### Update subject by id [ PUT /api/v1/admin/tutor/updateSubject/:subjectId ]
-   
+    REQ
+      body -> {name, category, data}
+    RES : 200
+      body -> {message: `Updated subject successfully`}   
   #### Delete subject by id  [ DELETE /api/v1/admin/tutor/deletSubject/:subjectId]
-   
+    REQ
+      params -> subjectId
+    RES : 200
+      body -> { message: "Deleted subject successfully" }   
   #### Delete category  [ DELETE /api/v1/admin/tutor/deleteCategory]
-   
+    REQ
+      body -> {category}
+    RES : 200
+      body -> { message: `Deleted all subject in ${category} category` }   
   #### Get all tutors  [ GET /api/v1/admin/tutor/]
-   
+    REQ
+      body -> {}
+    RES : 200
+      body -> { message: tutor }   
   #### Get tutor by id  [ GET /api/v1/admin/tutor/:tutorId]
    
   #### Delete tutor by id  [ DELETE /api/v1/admin/tutor/deleteTutor/:tutorId]
