@@ -32,7 +32,7 @@ module.exports.isTutor = (req, res, next) => {
       }
       return decoded;
     });
-    if (decoded.data.isTutor == true) {
+    if (decoded.data.tutor == true) {
       next();
     } else {
       res

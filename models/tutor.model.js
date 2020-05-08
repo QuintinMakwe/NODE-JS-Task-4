@@ -24,7 +24,8 @@ const tutorSchema = new Schema({
   },
   subjects: [
     {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "Subject",
       default: null,
     },
   ],
@@ -33,6 +34,5 @@ const tutorSchema = new Schema({
     required: true,
   },
 });
-
 
 module.exports = mongoose.model("Tutor", tutorSchema);

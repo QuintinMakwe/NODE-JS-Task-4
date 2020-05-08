@@ -25,35 +25,22 @@ module.exports.postSignUp = async (req, res) => {
         .json({ message: "Tutor with email already exists" });
     } else {
       if (subjects) {
-        //retrieve all the valid subjects
-        const validSubjects = await Subject.find().select({ name: 1 });
-        const validSubjectName = []
-        validSubjects.forEach(subject => {
-            validSubjectName.push(subject.name)
-        })
+        return res.status(400).json({
+          error:
+            "Please leave out the subjects field. You get an opportunity to register subjects after you are logged in",
+        });
+      } else {
+        const tutor = await new Tutor({
+          name,
+          email,
+          admin,
+          password: hashedPassword,
+        }).save();
 
-        //filter out the subjects that are not valid
-        const subjectCheck = subjects.filter(subject => {
-            return validSubjectName.includes(subject) == true
-        })
-        
-        if(subjectCheck.length > 0){
-            const tutor = await new Tutor({
-                name,
-                email,
-                admin,
-                password: hashedPassword,
-                subjects : subjectCheck 
-              }).save();
-
-            res.status(200).json({ message: tutor , meta: "If all the subjects you provided did not reflect in your record, note that this is because the subject is not a valid registered subject in the Database"});
-        }else{
-            res.status(400).json({error: "The subject(s) you entered isn't a valid subject in the db, you can leave out the subject field and go register for subject after you are logged in" })
-        }
+        res.status(200).json({
+          message: tutor,
+        });
       }
-      
-
-      
     }
   } catch (err) {
     res.status(300).json({ error: err.message });
@@ -108,5 +95,177 @@ module.exports.postLogin = async (req, res) => {
     }
   } catch (err) {
     res.json({ error: err.messge });
+  }
+};
+
+module.exports.postTakeSubject = async (req, res) => {
+  try {
+    const { subject, category } = req.body;
+    //check that it's a valid category
+    const validCategory = ["primary", "jss", "sss"];
+    if (validCategory.includes(category)) {
+      //check that subject exist
+      const subjectCount = await Subject.find({
+        name: subject,
+        category,
+      }).count((err, count) => {
+        if (err) {
+          return res.status(500).json({ error: err });
+        }
+        return count;
+      });
+      //return all valid subjects and format it
+      const validSubject = await Subject.find();
+      const validSubjectData = [];
+      validSubject.forEach((subject) => {
+        validSubjectData.push(`${subject.name} : ${subject.category}`);
+      });
+      if (subjectCount > 0) {
+        //get the logged in tutor and update their document accordingly
+        const token = req.cookies.token;
+        const decoded = jwt.verify(token, jwtSecret, (err, decoded) => {
+          if (err) {
+            res.status(400).json({ error: err });
+          }
+          return decoded;
+        });
+        //get id of logged in user
+        const loggedInUserEmail = decoded.data.email;
+        //get the subjects of the logged in user
+        let tutorSubject = await Tutor.find({ email: loggedInUserEmail });
+        //to get the id of the subject you want to register
+        let subjectId = await Subject.find({ name: subject, category });
+        //check that the subject hasn't been registered before
+        if (tutorSubject[0].subjects.includes(subjectId[0]._id)) {
+          return res
+            .status(400)
+            .json({ error: "You can't register for same subject twice" });
+        }
+        await tutorSubject[0].subjects.push(subjectId[0]._id);
+        await Tutor.updateOne(
+          { email: loggedInUserEmail },
+          {
+            $set: {
+              subjects: tutorSubject[0].subjects,
+            },
+          }
+        );
+        await res.json({ message: "Registered subject succcessfully" });
+      } else {
+        res.status(400).json({
+          error: `Please Enter a valid subject. Here is a list of valid subjects and their categories you can register for -> ${validSubjectData}`,
+        });
+      }
+    } else {
+      res.status(400).json({ error: "You entered an invalid category" });
+    }
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+module.exports.getRegisteredSubject = async (req, res) => {
+  try {
+    //get the logged in tutor
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, jwtSecret, (err, decoded) => {
+      if (err) {
+        res.status(400).json({ error: err });
+      }
+      return decoded;
+    });
+    const loggedInUserEmail = decoded.data.email;
+    const tutorSubject = await Tutor.find({ email: loggedInUserEmail })
+      .populate("subjects")
+      .exec();
+    res.status(200).json({ message: tutorSubject[0].subjects });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+module.exports.postUpdateSubject = async (req, res) => {
+  try {
+    const { subjectId } = req.params;
+    const { name, category, data } = req.body;
+    //check that it's a valid subject
+    const subjectCount = await Subject.find({
+      _id: subjectId,
+    }).count((err, count) => {
+      if (err) {
+        return res.status(500).json({ error: err });
+      }
+      return count;
+    });
+    if (subjectCount > 0) {
+      if (name) {
+        await Subject.updateOne(
+          { _id: subjectId },
+          {
+            $set: {
+              name,
+            },
+          }
+        );
+      }
+      if (category) {
+        await Subject.updateOne(
+          { _id: subjectId },
+          {
+            $set: {
+              category,
+            },
+          }
+        );
+      }
+
+      if (data) {
+        let subjectData = await Subject.find({ _id: subjectId }).select({
+          data: 1,
+        });
+        if (subjectData[0].data.includes(data)) {
+          return res.status(400).json({ error: "Data url already exists" });
+        }
+        await subjectData[0].data.push(data);
+        await Subject.updateOne(
+          { _id: subjectId },
+          {
+            $set: {
+              data: subjectData[0].data,
+            },
+          }
+        );
+      }
+
+      res.status(200).json({ message: `Updated subject successfully` });
+    } else {
+      res.status(400).json({
+        error: "Please enter a valid subject",
+      });
+    }
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+};
+module.exports.deleteSubject = async (req, res) => {
+  try {
+    const { subjectId } = req.params;
+    //check that it's a valid subject
+    const subjectCount = await Subject.find({
+      _id: subjectId,
+    }).count((err, count) => {
+      if (err) {
+        res.status(500).json({ error: err });
+      }
+      return count;
+    });
+
+    if (subjectCount > 0) {
+      await Subject.findByIdAndDelete(subjectId);
+
+      res.status(200).json({ message: "Deleted subject successfully" });
+    } else {
+      res.status(400).json({ error: "Enter a valid subject" });
+    }
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 };

@@ -36,6 +36,17 @@ subjectSchema.pre("updateOne", async function (next) {
       throw new Error("Enter a valid category please");
     }
   }
+  if (this._update.$set.data) {
+    this._update.$set.data.forEach((data) => {
+      const testUrl = /(https?):\/\/([\w-]+(\.[\\w-]+)*\.([a-z]+))(([\w.,@?^=%&amp;:\/~+#()!-]*)([\w@?^=%&amp;\/~+#()!-]))?/gi.test(
+        data
+      );
+      if (testUrl == false) {
+        throw new Error(`Enter a valid url, ${data} is not a valid url`);
+      }
+    });
+  }
+  next();
 });
 
 module.exports = mongoose.model("Subject", subjectSchema);
