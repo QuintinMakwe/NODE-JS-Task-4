@@ -1,11 +1,11 @@
 # NODE-JS-Task-4
 This contains the server side code for node js task 4 of Start Ng remote Internship
 
-### Here is a link to the live api --> https://quintinonlineschool.herokuapp.com/
+#### Here is a link to the live api --> https://quintinonlineschool.herokuapp.com/
 
 #### Admin login --> email: "quintinmakwe@gmail.com", password: "glasgoware"
 
-### Admin Routes
+## Admin Routes
   #### Make a tutor admin [ POST /api/v1/admin/tutor/maketutoradmin ]
     REQ
       body -> {email}
@@ -73,7 +73,7 @@ This contains the server side code for node js task 4 of Start Ng remote Interns
       body -> { message: "Successfully deleted lesson" }    
    
 
-### Tutors Routes
+## Tutors Routes
   #### Post signup details  [ POST /api/v1/tutor/signup]
     REQ
       body -> {name, email, admin, password, subjects}
@@ -106,7 +106,7 @@ This contains the server side code for node js task 4 of Start Ng remote Interns
       body -> { message: "Deleted subject successfully" } 
 
 
-### Student Routes
+## Student Routes
   #### Post student signup details  [ POST /api/v1/student/signup]
     REQ
       body -> {name, email, password}
@@ -129,7 +129,7 @@ This contains the server side code for node js task 4 of Start Ng remote Interns
       body -> { message: student }   
 
 
-### General Routes
+## General Routes
   #### Get a subject in a category by id  [ GET /api/v1/general/retrieveSubject/:subjectId]
     REQ
       body -> {category}
