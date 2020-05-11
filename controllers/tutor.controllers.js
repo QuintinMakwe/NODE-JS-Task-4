@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports.postSignUp = async (req, res) => {
   try {
-    const { name, email, password, subjects } = req.body;
+    const { name, email, password, subjects, admin } = req.body;
     const hashedPassword = bcrypt.hashSync(password, 10);
     const tutorCount = await Tutor.find({ email }).count((err, count) => {
       if (err) {
@@ -34,6 +34,7 @@ module.exports.postSignUp = async (req, res) => {
           name,
           email,
           password: hashedPassword,
+          admin,
         }).save();
 
         res.status(200).json({
