@@ -41,11 +41,11 @@ This contains the server side code for node js task 4 of Start Ng remote Interns
       body -> {}
     RES : 200
       body -> { message: tutor }   
-  #### Delete tutor by id  [ DELETE /api/v1/admin/tutor/deleteTutor/:tutorId]
+  #### Deactivate tutor by id  [ PUT /api/v1/admin/tutor//deactivateTutor/:tutorId]
     REQ
       body -> {}
     RES : 200
-      body -> { message: "Tutor deleted successfully" }     
+      body -> {message: "Tutor deactivated successfully"  }     
   #### Create a lesson  [ POST /api/v1/admin/tutor/createLesson]
     REQ
       body -> {name, timeStart, timeEnd, tutor, data, category, subject}
@@ -76,7 +76,7 @@ This contains the server side code for node js task 4 of Start Ng remote Interns
 ## Tutors Routes
   #### Post signup details  [ POST /api/v1/tutor/signup]
     REQ
-      body -> {name, email, admin, password, subjects}
+      body -> {name, email, password,}
     RES : 200
       body -> { message: tutor } 
   #### Post login details  [ POST /api/v1/tutor/login]
