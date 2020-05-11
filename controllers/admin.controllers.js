@@ -5,9 +5,18 @@ const Tutor = require("../models/tutor.model");
 
 const ObjectId = require("mongodb").ObjectID;
 
+const { checkEmptyFields } = require("../validation/index.validation");
+
 module.exports.postMakeAdmin = async (req, res) => {
   try {
     const { email } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
 
     //verify that it's a valid tutor
     const isValidTutorCount = await Tutor.find({ email }).count(
@@ -41,6 +50,13 @@ module.exports.postMakeAdmin = async (req, res) => {
 module.exports.createSubject = async (req, res) => {
   try {
     const { name, category, data } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
     //verify that subject doesn't already exist
     const subjectCount = await Subject.find({ name, category }).count(
       (err, count) => {
@@ -72,6 +88,13 @@ module.exports.updateSubject = async (req, res) => {
   try {
     const { subjectId } = req.params;
     const { name, category, data } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
     //check that it's a valid subject
     const subjectCount = await Subject.find({
       _id: subjectId,
@@ -247,6 +270,14 @@ module.exports.createLesson = async (req, res) => {
       category,
       subject,
     } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
+
     //check that time start is not in the past and timeEnd is greater that timeStart
     if (
       new Date(timeStart).getTime() < new Date().getTime() ||
@@ -346,6 +377,13 @@ module.exports.updateLesson = async (req, res) => {
       subject,
       category,
     } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
 
     const isValidLessonCount = await Lesson.find({ _id: lessonId }).count(
       (err, count) => {

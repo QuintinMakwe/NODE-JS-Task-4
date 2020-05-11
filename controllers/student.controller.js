@@ -5,12 +5,21 @@ const Subject = require("../models/subject.model");
 
 const { jwtSecret } = require("../config/config.index");
 
+const { checkEmptyFields } = require("../validation/index.validation");
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 module.exports.postSignUp = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
     const hashedPassword = bcrypt.hashSync(password, 10);
     const studentCount = await Student.find({ email }).count((err, count) => {
       if (err) {
@@ -41,6 +50,13 @@ module.exports.postSignUp = async (req, res) => {
 module.exports.postLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
     const studentCount = await Student.find({ email }).count((err, count) => {
       if (err) {
         return res.json({ error: err });
@@ -94,6 +110,13 @@ module.exports.getTutor = async (req, res) => {
   try {
     //see all tutors taking a subject in category
     const { subject, category } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
     //search subject model with that subject name and category, if match return subjectId
     //search all the tutors.subject for the returned subject and return the tutors
     const isValidSubject = await Subject.find({
@@ -148,6 +171,13 @@ module.exports.getTutor = async (req, res) => {
 module.exports.bookLesson = async (req, res) => {
   try {
     const { name, tutor, subject } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
     const isValidLesson = await Lesson.find({ name, tutor, subject }).count(
       (err, count) => {
         if (err) {

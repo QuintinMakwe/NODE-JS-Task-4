@@ -17,7 +17,7 @@ const studentRoutes = require("./routes/student.routes");
 const generalRoutes = require("./routes/general.routes");
 
 //Mongoose set-up
-mongoose.connect(atlasConnectionString, {
+mongoose.connect(mongooseConnectionString, {
   useNewUrlParser: true,
 });
 

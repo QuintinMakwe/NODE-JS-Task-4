@@ -110,3 +110,11 @@ module.exports.isDeactivated = async (req, res, next) => {
     res.status(400).json({ error: err.message });
   }
 };
+
+module.exports.checkEmptyFields = (reqBody) => {
+  for (key in reqBody) {
+    if (reqBody[key].trim().length == 0) {
+      return key;
+    }
+  }
+};

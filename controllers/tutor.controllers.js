@@ -4,13 +4,22 @@ const Tutor = require("../models/tutor.model");
 const Subject = require("../models/subject.model");
 
 const { jwtSecret } = require("../config/config.index");
+const { checkEmptyFields } = require("../validation/index.validation");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 module.exports.postSignUp = async (req, res) => {
   try {
-    const { name, email, password, subjects, admin } = req.body;
+    const { name, email, password, subjects } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
+
     const hashedPassword = bcrypt.hashSync(password, 10);
     const tutorCount = await Tutor.find({ email }).count((err, count) => {
       if (err) {
@@ -50,6 +59,13 @@ module.exports.postSignUp = async (req, res) => {
 module.exports.postLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
     const tutorCount = await Tutor.find({ email }).count((err, count) => {
       if (err) {
         return res.json({ error: err });
@@ -101,6 +117,14 @@ module.exports.postLogin = async (req, res) => {
 module.exports.postTakeSubject = async (req, res) => {
   try {
     const { subject, category } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
+
     //check that it's a valid category
     const validCategory = ["primary", "jss", "sss"];
     if (validCategory.includes(category)) {
@@ -186,6 +210,13 @@ module.exports.postUpdateSubject = async (req, res) => {
   try {
     const { subjectId } = req.params;
     const { name, category, data } = req.body;
+    //check for empty fields
+    const checkTrimData = checkEmptyFields(req.body);
+    if (checkTrimData) {
+      return res
+        .status(400)
+        .json({ error: `You can't leave the ${checkTrimData} field empty` });
+    }
     //check that it's a valid subject
     const subjectCount = await Subject.find({
       _id: subjectId,
