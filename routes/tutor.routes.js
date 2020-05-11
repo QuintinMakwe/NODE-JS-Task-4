@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { isTutor } = require("../validation/index.validation");
+const { isTutor, isDeactivated } = require("../validation/index.validation");
 const {
   postSignUp,
   postLogin,
@@ -15,11 +15,26 @@ router.post("/signup", postSignUp);
 
 router.post("/login", postLogin);
 
-router.post("/registerSubject", isTutor, postTakeSubject);
+router.post("/registerSubject", isTutor, isDeactivated, postTakeSubject);
 
-router.get("/viewRegisteredSubject/", isTutor, getRegisteredSubject);
+router.get(
+  "/viewRegisteredSubject/",
+  isTutor,
+  isDeactivated,
+  getRegisteredSubject
+);
 
-router.put("/updateSubject/:subjectId", isTutor, postUpdateSubject);
+router.put(
+  "/updateSubject/:subjectId",
+  isTutor,
+  isDeactivated,
+  postUpdateSubject
+);
 
-router.delete("/deleteSubject/:subjectId", isTutor, deleteSubject);
+router.delete(
+  "/deleteSubject/:subjectId",
+  isTutor,
+  isDeactivated,
+  deleteSubject
+);
 module.exports = router;

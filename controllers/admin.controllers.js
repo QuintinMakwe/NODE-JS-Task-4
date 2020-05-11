@@ -220,8 +220,15 @@ module.exports.deleteTutor = async (req, res) => {
       }
     );
     if (isValidTutorCount) {
-      await Tutor.findByIdAndDelete(tutorId);
-      res.status(200).json({ message: "Tutor deleted successfully" });
+      await Tutor.update(
+        { _id: tutorId },
+        {
+          $set: {
+            isActive: false,
+          },
+        }
+      );
+      res.status(200).json({ message: "Tutor deactivated successfully" });
     } else {
       res.status(400).json({ error: "Please enter a valid tutor" });
     }
