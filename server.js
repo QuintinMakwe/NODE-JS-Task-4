@@ -22,7 +22,7 @@ mongoose.connect(atlasConnectionString, {
 });
 
 mongoose.connection.on("error", (err) => {
-  console.log(`An error occured connecting to the DB server ${err}`);
+  console.log("check your network connection and try connecting again");
 });
 
 mongoose.connection.on("connected", (err, res) => {
