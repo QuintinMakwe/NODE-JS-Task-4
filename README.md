@@ -45,7 +45,7 @@ This contains the server side code for node js task 4 of Start Ng remote Interns
     REQ
       body -> {}
     RES : 200
-      body -> { message: "Tutor deleted successfully" }     
+      body -> {message: "Tutor deactivated successfully"  }     
   #### Create a lesson  [ POST /api/v1/admin/tutor/createLesson]
     REQ
       body -> {name, timeStart, timeEnd, tutor, data, category, subject}
